@@ -1,57 +1,75 @@
 <template>
-    <div id="app">
-      <header>
-        <h1>Mental Health Care App</h1>
-        <nav>
-          <router-link to="/">Home</router-link>
-          <router-link to="/journals">Journals</router-link>
-          <router-link to="/resources">Resources</router-link>
-        </nav>
-      </header>
-  
-      <main>
-        <router-view />
-      </main>
-  
-      <footer>
-        <p>&copy; 2024 Mental Health Care</p>
-      </footer>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'App',
-    data() {
-      return {
-        // Global app data can go here if necessary
-      };
-    }
-  };
-  </script>
-  
-  <style scoped>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
-  
-  header {
-    background-color: #4CAF50;
-    padding: 10px 0;
-    color: white;
-  }
-  
-  nav a {
-    margin: 0 15px;
-    color: white;
-    text-decoration: none;
-  }
-  
-  footer {
-    margin-top: 20px;
-  }
-  </style>
-  
+  <RouterView />
+</template>
+
+<script lang="ts">
+import { defineComponent, nextTick, onBeforeMount, onMounted } from "vue";
+import { RouterView } from "vue-router";
+import { useConfigStore } from "@/stores/config";
+import { useThemeStore } from "@/stores/theme";
+import { useBodyStore } from "@/stores/body";
+import { themeConfigValue } from "@/layouts/default-layout/config/helper";
+import { initializeComponents } from "@/core/plugins/keenthemes";
+
+export default defineComponent({
+  name: "app",
+  components: {
+    RouterView,
+  },
+  setup() {
+    const configStore = useConfigStore();
+    const themeStore = useThemeStore();
+    const bodyStore = useBodyStore();
+
+    onBeforeMount(() => {
+      /**
+       * Overrides the layout config using saved data from localStorage
+       * remove this to use static config (@/layouts/default-layout/config/DefaultLayoutConfig.ts)
+       */
+      configStore.overrideLayoutConfig();
+
+      /**
+       *  Sets a mode from configuration
+       */
+      themeStore.setThemeMode(themeConfigValue.value);
+    });
+
+    onMounted(() => {
+      nextTick(() => {
+        initializeComponents();
+
+        bodyStore.removeBodyClassName("page-loading");
+      });
+    });
+  },
+});
+</script>
+
+<style lang="scss">
+@import "bootstrap-icons/font/bootstrap-icons.css";
+@import "apexcharts/dist/apexcharts.css";
+@import "quill/dist/quill.snow.css";
+@import "animate.css";
+@import "sweetalert2/dist/sweetalert2.css";
+@import "nouislider/dist/nouislider.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "socicon/css/socicon.css";
+@import "line-awesome/dist/line-awesome/css/line-awesome.css";
+@import "dropzone/dist/dropzone.css";
+@import "@vueform/multiselect/themes/default.css";
+@import "prism-themes/themes/prism-shades-of-purple.css";
+@import "element-plus/dist/index.css";
+
+// Main demo style scss
+@import "assets/keenicons/duotone/style.css";
+@import "assets/keenicons/outline/style.css";
+@import "assets/keenicons/solid/style.css";
+@import "assets/sass/element-ui.dark";
+@import "assets/sass/plugins";
+@import "assets/sass/style";
+
+#app {
+  display: contents;
+}
+</style>
+@/layouts/default-layout/config/config
