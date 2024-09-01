@@ -1,4 +1,4 @@
-# MentalHealthApp-Clock On
+# MentalHealth
 
 you started developing with Vue 3 in Vite.
 
